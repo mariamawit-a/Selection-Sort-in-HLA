@@ -1,0 +1,88 @@
+program SelectionSort;
+#include ("stdlib.hhf");
+#include ("stdio.hhf");
+
+const   NumElements :=15;
+
+
+static 
+        //creates an integer array with 15 NumElements
+		DataToSort: uns32 [NumElements] := [99, 69, 67, 22, 66, 11, 33, 10, 76, 13, 27, 52, 50, 40, 35];
+		
+		//variable to keep track of array NumElements
+		lastIndex: int32:= 14;
+		
+		//variable to keep track of beginning element
+		Index: int32;
+		
+		//temp variable for switching NumElements around
+		temp: int32;
+
+begin SelectionSort;
+
+stdout.put(nl, "Student Name - Project 5: Selection Sort", nl);
+
+stdout.put("Selection Sort, Number of Array NumElements: ",NumElements, nl);
+
+//prints out original unsorted array that was declared in the beginning 
+stdout.put("Orginal Array Elements:", nl);
+
+
+					MOV (0,ebx) ; 
+printloopcheck:
+					CMP (ebx,lastIndex);
+					jnle exitprintloop;
+					stdout.put(DataToSort[ebx*4]: 4);
+					ADD(1,ebx);
+					jmp printloopcheck;
+
+exitprintloop:
+					stdout.put(nl,nl);
+
+whileloop:
+					CMP(lastIndex,0);
+					jna exitwhile;
+						
+					MOV(0,Index);
+					MOV(0,eax);
+forloop:
+					CMP (eax,lastIndex);
+					jnle exitforloop;
+					mov(Index,ebx);
+					mov(DataToSort[ebx*4],ecx);
+					
+					CMP(DataToSort[eax*4],ecx);
+					jna exitIndexCompare;
+					mov(eax,Index); //if an element is greater than the previous, save it in Index.    
+					exitIndexCompare:
+					ADD(1,eax);
+					jmp forloop;
+
+exitforloop:	
+					mov(lastIndex, ecx);//copy the values of the registers ecx and ebx
+
+					mov(Index, ebx);
+	
+					mov(DataToSort[ecx * 4], temp); //sets DataToSort[ecx*4] to temp
+	
+					mov(DataToSort[ebx * 4], DataToSort[ecx * 4]); //copies DataToSort[ebx*4] to DataToSort[ebx*4]
+	
+					mov(temp, DataToSort[ebx * 4]); //copies the value now in temp to DataToSort[ebx*4]
+		
+					SUB(1,lastIndex); //decrements lastIndex each time so the sorted elements are no longer being compared
+
+	
+					mov(0,ebx); //prints out each step of the sorting process
+printprocessloop:
+					CMP(ebx,15);
+					jnb exitprintprocessloop;
+					stdout.put(DataToSort[ebx*4]: 4);
+					ADD(1,ebx);
+					jmp printprocessloop;
+exitprintprocessloop:
+			
+					stdout.put(nl);
+					jmp whileloop;
+exitwhile:
+	
+end SelectionSort;
